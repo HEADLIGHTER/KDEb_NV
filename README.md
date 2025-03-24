@@ -129,7 +129,7 @@ sudo apt update
 sudo apt update
 ```
 
-Nvidia driver for x32 applications. You keep your x64 driver for x64 applications too: 
+Nvidia driver libs for x32 applications. You keep your x64 driver for x64 applications:
 
 ```
 sudo apt install nvidia-driver-libs:i386
