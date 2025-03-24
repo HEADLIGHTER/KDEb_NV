@@ -160,7 +160,7 @@ Open "Start Menu" and search for Steam Installer and proceed installation as usu
 Baloo file indexer is disabled by default in Debian. To enable it go to Search > File Search in system settings or execute
 
 ```
-balooctl enable
+sudo balooctl enable
 ```
 
 ---
