@@ -186,6 +186,27 @@ sudo balooctl enable
 
 ---
 
+### If met screen tearing in DE
+
+Create or open kwin profile:
+
+```
+sudo nano /etc/profile.d/kwin.sh
+```
+Add there line and save file:
+
+```
+export KWIN_TRIPLE_BUFFER=1
+```
+Open nvidia-settings:
+
+```
+nvidia-settings
+```
+Navigate to OpenGL Settings and disable "Sync to VBlank"
+
+---
+
 ### Optional
 
 Install from Discover:
