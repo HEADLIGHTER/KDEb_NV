@@ -211,8 +211,8 @@ Navigate to OpenGL Settings and disable "Sync to VBlank"
 
 Install from Discover:
 
-appstream://org.kde.markdownpart
+https://apps.kde.org/markdownpart/
 
-appstream://org.kde.svgpart
+https://apps.kde.org/svgpart/
 
-appstream://org.kde.kdenlive.desktop
+https://apps.kde.org/kdenlive/
