@@ -79,42 +79,9 @@ After standard message about nouveau driver conflict and successful installation
 ```
 sudo reboot
 ```
-
----
-
-### KDE installation:
-
-Login into your non-root user, install kde-desktop, SDDM, GTK applications theme fixes and SSH if SSH server was installed during Debian installation
-
-```
-sudo apt install kde-plasma-desktop sddm breeze-gtk-theme kde-config-gtk-style kde-config-gtk-style-preview ssh
-```
-
-Reboot after successful installation of KDE plasma, in lower space of screen press "Desktop session" button and select X11 instead of Wayland
-
-After login into fresh installed desktop you can install standard or full package of KDE:
-
-```
-sudo apt install kde-standard
-```
-
-or
-
-```
-sudo apt install kde-full
-```
-
-Reboot:
-
-```
-sudo reboot
-```
-
----
-
 ### x86 support:
 
-  
+
 Install x86 support for x86 applications (Steam, Games, Davinci Resolve, etc.)
 
 ```
@@ -138,6 +105,60 @@ sudo apt install nvidia-driver-libs:i386
 ```
 sudo reboot
 ```
+---
+
+### KDE installation:
+
+Login into your non-root user, install kde-desktop, SDDM, GTK applications theme fixes and SSH if SSH server was installed during Debian installation
+
+```
+sudo apt install kde-plasma-desktop sddm breeze-gtk-theme kde-config-gtk-style kde-config-gtk-style-preview ssh
+```
+
+Comment your interfaces in /etc/network/interfaces to allow NetworkManager in Plasma control your net:
+
+```
+sudo nano /etc/network/interfaces
+```
+
+Turn
+
+```
+# The primary network interface
+allow-hotplug enp7s0
+iface enp7s0 inet dhcp
+```
+Into:
+
+```
+# The primary network interface
+#allow-hotplug enp7s0
+#iface enp7s0 inet dhcp
+```
+Reboot after successful installation of KDE plasma:
+
+```
+sudo reboot
+```
+On login screen search desktop session button and select Plasma(X11) instead of Plasma(Wayland)
+
+After login into fresh installed desktop you can optional install standard or full package of KDE:
+
+```
+sudo apt install kde-standard
+```
+
+or
+
+```
+sudo apt install kde-full
+```
+
+Reboot:
+
+```
+sudo reboot
+```
 
 ---
 
@@ -151,7 +172,7 @@ sudo apt install steam-installer
 sudo apt install mesa-vulkan-drivers libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
 ```
 
-Open "Start Menu" and search for Steam Installer and proceed installation as usual
+Open "Application Launcher", search for Steam Installer and proceed installation as usual
 
 ---
 
