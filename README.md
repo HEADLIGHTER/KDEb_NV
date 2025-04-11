@@ -209,6 +209,12 @@ Navigate to OpenGL Settings and disable "Sync to VBlank"
 
 ### Optional
 
+KAccounts app for google/nextcloud/etc. accounts section in system settings
+
+```
+apt install kaccounts-integration kio-gdrive
+```
+
 Install from Discover:
 
 https://apps.kde.org/markdownpart/
