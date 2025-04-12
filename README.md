@@ -33,7 +33,7 @@ reboot
 
 ---
 
-# Only for Nvidia GPUs 
+# Only for Nvidia GPUs
 
   
 Login into your non-root account and install linux headers for proprietary nvidia driver:
@@ -142,7 +142,20 @@ sudo reboot
 ```
 On login screen search desktop session button and select Plasma(X11) instead of Plasma(Wayland)
 
-After login into fresh installed desktop you can optional install standard or full package of KDE:
+After login into fresh installed desktop you need to install standard sound server on your choice:
+
+**PulseAudio:**
+
+```
+sudo apt install pulseaudio pavucontrol pamixer
+```
+
+OR **PipeWire**:
+
+https://wiki.debian.org/PipeWire
+
+You can optional install standard or full package of KDE:
+
 
 ```
 sudo apt install kde-standard
@@ -215,10 +228,29 @@ KAccounts app for google/nextcloud/etc. accounts section in system settings
 apt install kaccounts-integration kio-gdrive
 ```
 
-Install from Discover:
+#### Install from Discover:
+
+ **Kate plugins for preview:**
 
 https://apps.kde.org/markdownpart/
 
 https://apps.kde.org/svgpart/
 
+**Apps:**
+
 https://apps.kde.org/kdenlive/
+
+https://apps.kde.org/krita/
+
+
+### Sources
+
+https://wiki.debian.org/
+
+https://wiki.debian.org/KDE
+
+https://wiki.debian.org/PulseAudio
+
+https://wiki.debian.org/PipeWire
+
+https://wiki.debian.org/NvidiaGraphicsDrivers
