@@ -93,7 +93,7 @@ sudo apt update
 ```
 
 ```
-sudo apt update
+sudo apt upgrade
 ```
 
 Nvidia driver libs for x32 applications. You keep your x64 driver for x64 applications:
@@ -140,7 +140,30 @@ Reboot after successful installation of KDE plasma:
 ```
 sudo reboot
 ```
-On login screen search desktop session button and select Plasma(X11) instead of Plasma(Wayland)
+You may not be able to login using Wayland, if so:
+
+**Grub Fix**:
+
+`sudo nano /etc/default/grub`
+
+`GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nvidia-drm.modeset=1"`
+
+`sudo update-grub`
+`sudo reboot`
+
+**Or Modprobe Fix**:
+
+`sudo nano /etc/modprobe.d/nvidia-drm.conf`
+
+Add:
+
+`options nvidia_drm modeset=1`
+
+Then update your initramfs and reboot.
+
+`sudo update-initramfs -u`
+`sudo reboot`
+
 
 After login into fresh installed desktop you need to install standard sound server on your choice:
 
