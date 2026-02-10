@@ -53,7 +53,7 @@ Add "contrib", "non-free" and "non-free-firmware" components to /etc/apt/sources
 sudo nano /etc/apt/sources.list  
 ```
 
-clear this file and paste
+clear or comment everything in this file and paste:
 
 ```
 deb http://deb.debian.org/debian/ trixie main contrib non-free non-free-firmware
@@ -257,6 +257,7 @@ https://apps.kde.org/svgpart/
 **Apps:**
 
 !OPTIONAL!
+
 https://apps.kde.org/kdenlive/
 
 https://apps.kde.org/krita/
