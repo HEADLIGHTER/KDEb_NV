@@ -31,6 +31,7 @@ usermod -aG sudo newuser
 reboot
 ```
 
+## You can perform next steps from second pc via ssh for ctrlc+ctrlv experience 
 ---
 
 # Only for Nvidia GPUs
