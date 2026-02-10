@@ -1,4 +1,4 @@
-# KDEb13_NV
+#(!WIP!) KDEb13_NV
 Easy and right way to make minimal or full KDE Plasma install on Debian with Nvidia GPU on desktop PC work correctly together with Intel IGPU 
 
 ---
