@@ -1,13 +1,13 @@
-# KDEb_NV
+# KDEb13_NV
 Easy and right way to make minimal or full KDE Plasma install on Debian with Nvidia GPU on desktop PC work correctly together with Intel IGPU 
 
 ---
 
 ### Linux Installation: 
 
-Download and install latest Debian netinstaller, proceed your standard installing procedure until selection of additional software and desktop environment. Uncheck all DEs with space, select only standard system utilities and optional SSH server 
+Download and install latest Debian 13 netinstaller, proceed your standard installing procedure until selection of additional software and desktop environment. Uncheck all DEs with space, select only standard system utilities and optional SSH server 
 
-After boot into fresh installed linux at terminal stage login into root and install sudo:
+After boot into fresh installed linux at terminal stage login into root and install sudo if password for root was set during installation:
 
 ```
 apt install sudo 
@@ -35,11 +35,16 @@ reboot
 
 # Only for Nvidia GPUs
 
-  
+### SecureBoot
+According Debian Wiki:
+> If you have SecureBoot enabled, you need to enroll your machine owner's key (MOK) to use DKMS modules. Detailed instructions are available
+[here](https://wiki.debian.org/SecureBoot#dkms). It's recommended to do this before installing nvidia-driver so that you do not have to rebuild the kernel modules.
+
+## Driver install
 Login into your non-root account and install linux headers for proprietary nvidia driver:
 
 ```
-sudo apt install linux-headers-amd64 
+sudo apt install linux-headers-generic 
 ```
 
 Add "contrib", "non-free" and "non-free-firmware" components to /etc/apt/sources.list:
@@ -48,41 +53,24 @@ Add "contrib", "non-free" and "non-free-firmware" components to /etc/apt/sources
 sudo nano /etc/apt/sources.list  
 ```
 
-Turn
+clear this file and paste
 
 ```
-deb http://deb.debian.org/debian/ bookworm main non-free-firmware 
-deb-src http://deb.debian.org/debian/ bookworm main non-free-firmware
-```
+deb http://deb.debian.org/debian/ trixie main contrib non-free non-free-firmware
 
-Into:
+deb http://security.debian.org/debian-security/ trixie-security contrib non-free main non-free-firmware
 
-```
-deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware 
-deb-src http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian/ trixie-updates non-free-firmware non-free contrib main
+
 ```
 
 Save and exit, update repos:
 
-```
-sudo apt update
-```
 
-Install Nvidia dirver:
-
-```
-sudo apt install nvidia-driver firmware-misc-nonfree
-```
-
-After standard message about nouveau driver conflict and successful installation of proprietary driver reboot system:
-
-```
-sudo reboot
-```
 ### x86 support:
 
 
-Install x86 support for x86 applications (Steam, Games, Davinci Resolve, etc.)
+Install x86 support for x86 applications (Steam, Wine, Games, Davinci Resolve, etc.)
 
 ```
 sudo dpkg --add-architecture i386
@@ -92,38 +80,83 @@ sudo dpkg --add-architecture i386
 sudo apt update
 ```
 
-```
-sudo apt update
-```
+Install Nvidia dirver:
 
-Nvidia driver libs for x32 applications. You keep your x64 driver for x64 applications:
-
-```
-sudo apt install nvidia-driver-libs:i386
-```
+### Optional!
+For GPU and it's recommended/supported driver detection use nvidia-detect:
 
 ```
-sudo reboot
+sudo apt install nvidia-detect
+sudo nvidia-detect
 ```
+
+
+```
+sudo apt install nvidia-kernel-dkms nvidia-driver
+```
+
+After standard message about nouveau driver conflict and successful installation of proprietary driver reboot system:
+
+You can verify dkms with:
+
+```
+sudo dkms status | grep nvidia
+```
+
 ---
 
-### KDE installation:
+# KDE&Wayland installation:
+
 
 Login into your non-root user, install kde-desktop, SDDM, GTK applications theme fixes and SSH if SSH server was installed during Debian installation
 
+> Make decision about your KDE installation: 
+wiki.debian.org/KDE#Installation
+> (!) Watch out for recommended packages (that is, optional package dependencies)!
+They are installed by default, but you might not want them.
+apt option --no-install-recommends and aptitude option --without-recommends can help with this.
+
+ Replace kde-plasma-desktop with kde-standard, kde-full or task-kde-desktop:
 ```
-sudo apt install kde-plasma-desktop sddm breeze-gtk-theme kde-config-gtk-style kde-config-gtk-style-preview ssh
+sudo apt install plasma-workspace-wayland kde-plasma-desktop sddm breeze-gtk-theme kde-config-gtk-style kde-config-gtk-style-preview kde-config-screenlocker plymouth plymouth-themes plymouth-theme-breeze kde-config-plymouth colord-kde 
 ```
 
-Comment your interfaces in /etc/network/interfaces to allow NetworkManager in Plasma control your net:
+After installation edit your grub file:
+```
+sudo nano /etc/default/grub
+```
+> Within the quotes on the line that starts with GRUB_CMDLINE_LINUX_DEFAULT, add the option:
+```
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nvidia-drm.modeset=1"
+```
+
+Search for #GRUB_GFXMODE, uncomment it and set your screen resolution like 
+```
+GRUB_GFXMODE=1920x1080
+```
+> You can also write the color depth:
+```
+GRUB_GFXMODE=1920x1080x32
+```
+
+Save and exit, update grub config:
+```
+sudo update-grub2
+```
+
+Comment your interfaces in /etc/network/interfaces to allow NetworkManager in Plasma control your network connections:
 
 ```
 sudo nano /etc/network/interfaces
 ```
 
-Turn
+Turn everything in this file like:
 
 ```
+auto wlan0
+iface wlan0 inet dhcp
+...
+
 # The primary network interface
 allow-hotplug enp7s0
 iface enp7s0 inet dhcp
@@ -131,30 +164,29 @@ iface enp7s0 inet dhcp
 Into:
 
 ```
+#auto wlan0
+#iface wlan0 inet dhcp
+#...
 # The primary network interface
 #allow-hotplug enp7s0
 #iface enp7s0 inet dhcp
 ```
-Reboot after successful installation of KDE plasma:
+Reboot system to apply all changes:
 
 ```
 sudo reboot
 ```
-On login screen search desktop session button and select Plasma(X11) instead of Plasma(Wayland)
 
-After login into fresh installed desktop you need to install standard sound server on your choice:
+### Enable file search indexer 
 
-**PulseAudio:**
+Baloo file indexer is disabled by default in Debian. To enable it go to Search > File Search in system settings or use command
 
 ```
-sudo apt install pulseaudio pavucontrol pamixer
+sudo balooctl enable
 ```
 
-OR **PipeWire**:
-
-https://wiki.debian.org/PipeWire
-
-You can optional install standard or full package of KDE:
+### Optionally!
+You can install standard or full package of KDE after smallest kde-plasma-desktop install:
 
 
 ```
@@ -166,53 +198,37 @@ or
 ```
 sudo apt install kde-full
 ```
+>//Delete? On login screen search desktop session button and select Plasma(X11) instead of Plasma(Wayland)
 
-Reboot:
-
+>//Delete? After login into fresh installed desktop you need to install standard sound server on your choice:
+**PulseAudio:**
 ```
-sudo reboot
+sudo apt install pulseaudio pavucontrol pamixer
 ```
+or  **PipeWire**:
+https://wiki.debian.org/PipeWire
 
----
 
 ### Steam install:
 
 ```
-sudo apt install steam-installer
-```
-
-```
-sudo apt install mesa-vulkan-drivers libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
+sudo apt install steam-installer mesa-vulkan-drivers libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
 ```
 
 Open "Application Launcher", search for Steam Installer and proceed installation as usual
 
 ---
 
-### Enable file search indexer 
-
-Baloo file indexer is disabled by default in Debian. To enable it go to Search > File Search in system settings or execute
-
-```
-sudo balooctl enable
-```
-
----
-
-### If met screen tearing in DE
-
+## Pending revision! ### If met screen tearing in DE
 Create or open kwin profile:
-
 ```
 sudo nano /etc/profile.d/kwin.sh
 ```
 Add there line and save file:
-
 ```
 export KWIN_TRIPLE_BUFFER=1
 ```
 Open nvidia-settings:
-
 ```
 nvidia-settings
 ```
@@ -232,25 +248,30 @@ apt install kaccounts-integration kio-gdrive
 
  **Kate plugins for preview:**
 
+Install only if going to use Kate
 https://apps.kde.org/markdownpart/
 
 https://apps.kde.org/svgpart/
 
+
 **Apps:**
 
+!OPTIONAL!
 https://apps.kde.org/kdenlive/
 
 https://apps.kde.org/krita/
 
 
 ### Sources
-
 https://wiki.debian.org/
+
+https://wiki.debian.org/NvidiaGraphicsDrivers
+
+https://wiki.debian.org/Wayland
 
 https://wiki.debian.org/KDE
 
-https://wiki.debian.org/PulseAudio
+https://wiki.debian.org/plymouth
 
+>Delete? https://wiki.debian.org/PulseAudio
 https://wiki.debian.org/PipeWire
-
-https://wiki.debian.org/NvidiaGraphicsDrivers
